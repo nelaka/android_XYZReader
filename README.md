@@ -26,7 +26,7 @@ Kagure says:
 
 <h2> App's screenshots</h2>
 <h3> Before (starter code)</h3>
-<p><img src="screenshots/xyzreader_before_1.png" width="33%"/>   <img src="screenshots/xyzreader_before_2.png" width="33%"/></p>
+<p><img src="screenshots/XYZReader_before_1.png" width="33%"/>   <img src="screenshots/XYZReader_before_2.png" width="33%"/></p>
 <h3> After </h3>
-<p><img src="screenshots/xyzreader_1.png" width="33%"/>   <img src="screenshots/xyzreader_2.png" width="33%"/></p>
-<p><img src="screenshots/xyzreader_3.png" width="60%"/>   </p>
+<p><img src="screenshots/XYZReader_1.png" width="33%"/>   <img src="screenshots/XYZReader_2.png" width="33%"/></p>
+<p><img src="screenshots/XYZReader_3.png" width="60%"/>   </p>
