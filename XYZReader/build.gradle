@@ -12,6 +12,7 @@ android {
 
 dependencies {
     implementation "com.android.support:design:$androidSupportVersion"
+    implementation "com.android.support:exifinterface:$androidSupportVersion"
     implementation "com.android.support:support-v4:$androidSupportVersion"
     implementation "com.android.support:support-v13:$androidSupportVersion"
     implementation "com.android.support:appcompat-v7:$androidSupportVersion"
@@ -24,4 +25,8 @@ dependencies {
     //Butterknife
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    //Picasso
+
+    implementation 'com.squareup.picasso:picasso:2.5.2'
+
 }
