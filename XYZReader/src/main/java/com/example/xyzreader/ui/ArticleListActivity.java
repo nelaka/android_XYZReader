@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -58,6 +59,8 @@ public class ArticleListActivity extends AppCompatActivity implements
     SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
+    @BindView(R.id.main_view)
+    View mMainView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +77,7 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     private void refresh() {
         startService(new Intent(this, UpdaterService.class));
+
     }
 
     @Override
@@ -102,7 +106,14 @@ public class ArticleListActivity extends AppCompatActivity implements
     };
 
     private void updateRefreshingUI() {
+
         mSwipeRefreshLayout.setRefreshing(mIsRefreshing);
+        Snackbar snackbar = Snackbar.make(mMainView, "Fresh as new! ;)", Snackbar.LENGTH_SHORT);
+        View snackbarView = snackbar.getView();
+        TextView textView = snackbarView.findViewById(R.id.snackbar_text);
+        textView.setTextColor(getResources().getColor(R.color.colorTextIcons));
+        snackbarView.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+        snackbar.show();
     }
 
     @Override
@@ -198,14 +209,9 @@ public class ArticleListActivity extends AppCompatActivity implements
                         + "<br/>" + " by "
                         + mCursor.getString(ArticleLoader.Query.AUTHOR)));
             }
-            /*holder.thumbnailView.setImageUrl(
-                    mCursor.getString(ArticleLoader.Query.THUMB_URL),
-                    ImageLoaderHelper.getInstance(ArticleListActivity.this).getImageLoader());
-            holder.thumbnailView.setAspectRatio(mCursor.getFloat(ArticleLoader.Query.ASPECT_RATIO));*/
 
-            String url = mCursor.getString(ArticleLoader.Query.THUMB_URL);
 
-            Picasso.with(getBaseContext()).load(url).placeholder(R.drawable.photo_background_protection).error(R.drawable.photo_background_protection).into(holder.thumbnailView);
+            Picasso.with(getBaseContext()).load(mCursor.getString(ArticleLoader.Query.THUMB_URL)).placeholder(R.drawable.photo_background_protection).error(R.drawable.photo_background_protection).into(holder.thumbnailView);
         }
 
         @Override
@@ -213,4 +219,6 @@ public class ArticleListActivity extends AppCompatActivity implements
             return mCursor.getCount();
         }
     }
+
+
 }

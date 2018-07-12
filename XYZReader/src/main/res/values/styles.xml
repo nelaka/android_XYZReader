@@ -18,9 +18,15 @@
 <resources>
 
     <style name="Theme.Bacon" parent="@style/Theme.AppCompat.Light.NoActionBar">
-        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textColor">@color/colorText</item>
         <item name="android:statusBarColor">@color/colorPrimaryLight</item>
+        <item name="android:textAppearance">@android:style/TextAppearance.Material.Title</item>
 
+    </style>
+
+    <style name="Theme.Bacon.Detail">
+        <item name="android:textColor">@color/colorText</item>
+        <item name="android:textSize">@dimen/detail_text_size</item>
     </style>
 
 

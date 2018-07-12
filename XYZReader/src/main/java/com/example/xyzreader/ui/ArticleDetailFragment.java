@@ -20,6 +20,7 @@ import android.text.Html;
 import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -152,8 +153,9 @@ public class ArticleDetailFragment extends Fragment implements
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if (scrollRange + verticalOffset == 0) {
-
                     mCollapsingToolbar.setTitle(mCursor.getString(ArticleLoader.Query.TITLE));
+                    mCollapsingToolbar.setCollapsedTitleTextColor(getResources().getColor(R.color.colorTextIcons));
+                    mCollapsingToolbar.setCollapsedTitleGravity(Gravity.CENTER_HORIZONTAL);
                     isShow = true;
                 } else if (isShow) {
 
@@ -162,7 +164,6 @@ public class ArticleDetailFragment extends Fragment implements
                 }
             }
         });
-
 
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -258,9 +259,6 @@ public class ArticleDetailFragment extends Fragment implements
                     if (bitmap != null) {
                         Palette p = Palette.from(bitmap).generate();
 
-/*                    Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-                        public void onGenerated(Palette p) {
-  */
                         mMutedColor = p.getDarkMutedColor(0xFF333333);
                         mMetaBar.setBackgroundColor(mMutedColor);
                         updateStatusBar();
@@ -276,10 +274,8 @@ public class ArticleDetailFragment extends Fragment implements
 
                 @Override
                 public void onPrepareLoad(Drawable placeHolderDrawable) {
-
                 }
             };
-
 
             String url = mCursor.getString(ArticleLoader.Query.PHOTO_URL);
 
@@ -322,7 +318,7 @@ public class ArticleDetailFragment extends Fragment implements
         bindViews();
     }
 
-   /* public int getUpButtonFloor() {
+    public int getUpButtonFloor() {
         if (mPhotoContainerView == null || mPhotoView.getHeight() == 0) {
             return Integer.MAX_VALUE;
         }
@@ -331,5 +327,5 @@ public class ArticleDetailFragment extends Fragment implements
         return mIsCard
                 ? (int) mPhotoContainerView.getTranslationY() + mPhotoView.getHeight() - mScrollY
                 : mPhotoView.getHeight() - mScrollY;
-    }*/
+    }
 }

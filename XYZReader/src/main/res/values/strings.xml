@@ -1,10 +1,8 @@
 <resources>
 
     <string name="app_name">XYZ Reader</string>
-
     <string name="action_share">Share</string>
-
     <string name="up">Up</string>
-    <string name="todo">TODO</string>
+    <string name="book_photo_desc">Photo of the book</string>
 
 </resources>
