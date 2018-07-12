@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -19,6 +20,7 @@ import android.text.Html;
 import android.text.format.DateUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,10 +28,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -97,9 +99,10 @@ public class ArticleDetailFragment extends Fragment implements
     public ArticleDetailFragment() {
     }
 
-    public static ArticleDetailFragment newInstance(long itemId) {
+    public static Fragment newInstance(long itemId) {
         Bundle arguments = new Bundle();
         arguments.putLong(ARG_ITEM_ID, itemId);
+
         ArticleDetailFragment fragment = new ArticleDetailFragment();
         fragment.setArguments(arguments);
         return fragment;
@@ -119,9 +122,6 @@ public class ArticleDetailFragment extends Fragment implements
         setHasOptionsMenu(true);
     }
 
-    public ArticleDetailActivity getActivityCast() {
-        return (ArticleDetailActivity) getActivity();
-    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -153,8 +153,9 @@ public class ArticleDetailFragment extends Fragment implements
                     scrollRange = appBarLayout.getTotalScrollRange();
                 }
                 if (scrollRange + verticalOffset == 0) {
-
                     mCollapsingToolbar.setTitle(mCursor.getString(ArticleLoader.Query.TITLE));
+                    mCollapsingToolbar.setCollapsedTitleTextColor(getResources().getColor(R.color.colorTextIcons));
+                    mCollapsingToolbar.setCollapsedTitleGravity(Gravity.CENTER_HORIZONTAL);
                     isShow = true;
                 } else if (isShow) {
 
@@ -163,7 +164,6 @@ public class ArticleDetailFragment extends Fragment implements
                 }
             }
         });
-
 
         mFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -252,27 +252,34 @@ public class ArticleDetailFragment extends Fragment implements
 
             }
             mBodyView.setText(Html.fromHtml(mCursor.getString(ArticleLoader.Query.BODY).replaceAll("(\r\n|\n)", "<br />")));
-            //   mBodyView.setAllCaps(false);
 
-            ImageLoaderHelper.getInstance(getActivity()).getImageLoader()
-                    .get(mCursor.getString(ArticleLoader.Query.PHOTO_URL), new ImageLoader.ImageListener() {
-                        @Override
-                        public void onResponse(ImageLoader.ImageContainer imageContainer, boolean b) {
-                            Bitmap bitmap = imageContainer.getBitmap();
-                            if (bitmap != null) {
-                                Palette p = Palette.generate(bitmap, 12);
-                                mMutedColor = p.getDarkMutedColor(0xFF333333);
-                                mPhotoView.setImageBitmap(imageContainer.getBitmap());
-                                mMetaBar.setBackgroundColor(mMutedColor);
-                                updateStatusBar();
-                            }
-                        }
+            Target target = new Target() {
+                @Override
+                public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                    if (bitmap != null) {
+                        Palette p = Palette.from(bitmap).generate();
 
-                        @Override
-                        public void onErrorResponse(VolleyError volleyError) {
+                        mMutedColor = p.getDarkMutedColor(0xFF333333);
+                        mMetaBar.setBackgroundColor(mMutedColor);
+                        updateStatusBar();
+                    }
 
-                        }
-                    });
+                    mPhotoView.setImageBitmap(bitmap);
+                }
+
+                @Override
+                public void onBitmapFailed(Drawable errorDrawable) {
+
+                }
+
+                @Override
+                public void onPrepareLoad(Drawable placeHolderDrawable) {
+                }
+            };
+
+            String url = mCursor.getString(ArticleLoader.Query.PHOTO_URL);
+
+            Picasso.with(getActivity()).load(url).placeholder(R.drawable.photo_background_protection).error(R.drawable.photo_background_protection).into(target);
         } else {
             mRootView.setVisibility(View.GONE);
             mTitleView.setText("N/A");
@@ -311,7 +318,7 @@ public class ArticleDetailFragment extends Fragment implements
         bindViews();
     }
 
-   /* public int getUpButtonFloor() {
+    public int getUpButtonFloor() {
         if (mPhotoContainerView == null || mPhotoView.getHeight() == 0) {
             return Integer.MAX_VALUE;
         }
@@ -320,5 +327,5 @@ public class ArticleDetailFragment extends Fragment implements
         return mIsCard
                 ? (int) mPhotoContainerView.getTranslationY() + mPhotoView.getHeight() - mScrollY
                 : mPhotoView.getHeight() - mScrollY;
-    }*/
+    }
 }

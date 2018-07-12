@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.content.Loader;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -18,12 +19,14 @@ import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.xyzreader.R;
 import com.example.xyzreader.data.ArticleLoader;
 import com.example.xyzreader.data.ItemsContract;
 import com.example.xyzreader.data.UpdaterService;
+import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -56,17 +59,14 @@ public class ArticleListActivity extends AppCompatActivity implements
     SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
+    @BindView(R.id.main_view)
+    View mMainView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_list);
         ButterKnife.bind(this);
-        //    mToolbar = findViewById(R.id.toolbar);
-
-
-        //  final View toolbarContainerView = findViewById(R.id.toolbar_container);
-
 
         getLoaderManager().initLoader(0, null, this);
 
@@ -77,6 +77,7 @@ public class ArticleListActivity extends AppCompatActivity implements
 
     private void refresh() {
         startService(new Intent(this, UpdaterService.class));
+
     }
 
     @Override
@@ -105,7 +106,14 @@ public class ArticleListActivity extends AppCompatActivity implements
     };
 
     private void updateRefreshingUI() {
+
         mSwipeRefreshLayout.setRefreshing(mIsRefreshing);
+        Snackbar snackbar = Snackbar.make(mMainView, "Fresh as new! ;)", Snackbar.LENGTH_SHORT);
+        View snackbarView = snackbar.getView();
+        TextView textView = snackbarView.findViewById(R.id.snackbar_text);
+        textView.setTextColor(getResources().getColor(R.color.colorTextIcons));
+        snackbarView.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+        snackbar.show();
     }
 
     @Override
@@ -127,6 +135,20 @@ public class ArticleListActivity extends AppCompatActivity implements
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mRecyclerView.setAdapter(null);
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.thumbnail)
+        ImageView thumbnailView;
+        @BindView(R.id.article_title)
+        TextView titleView;
+        @BindView(R.id.article_subtitle)
+        TextView subtitleView;
+
+        public ViewHolder(View view) {
+            super(view);
+            ButterKnife.bind(this, view);
+        }
     }
 
     private class Adapter extends RecyclerView.Adapter<ViewHolder> {
@@ -187,10 +209,9 @@ public class ArticleListActivity extends AppCompatActivity implements
                         + "<br/>" + " by "
                         + mCursor.getString(ArticleLoader.Query.AUTHOR)));
             }
-            holder.thumbnailView.setImageUrl(
-                    mCursor.getString(ArticleLoader.Query.THUMB_URL),
-                    ImageLoaderHelper.getInstance(ArticleListActivity.this).getImageLoader());
-            holder.thumbnailView.setAspectRatio(mCursor.getFloat(ArticleLoader.Query.ASPECT_RATIO));
+
+
+            Picasso.with(getBaseContext()).load(mCursor.getString(ArticleLoader.Query.THUMB_URL)).placeholder(R.drawable.photo_background_protection).error(R.drawable.photo_background_protection).into(holder.thumbnailView);
         }
 
         @Override
@@ -199,17 +220,5 @@ public class ArticleListActivity extends AppCompatActivity implements
         }
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.thumbnail)
-        DynamicHeightNetworkImageView thumbnailView;
-        @BindView(R.id.article_title)
-        TextView titleView;
-        @BindView(R.id.article_subtitle)
-        TextView subtitleView;
 
-        public ViewHolder(View view) {
-            super(view);
-            ButterKnife.bind(this, view);
-        }
-    }
 }
