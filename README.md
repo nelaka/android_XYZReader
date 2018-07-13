@@ -29,7 +29,6 @@ Kagure says:
 <p><img src="screenshots/XYZReader_before_1.png" width="30%"/>   <img src="screenshots/XYZReader_before_2.png" width="30%"/></p>
 <h3> After </h3>
 <p><img src="screenshots/XYZReader_1.png" width="30%"/>   <img src="screenshots/XYZReader_2.png" width="30%"/>   <img src="screenshots/XYZReader_3.png" width="30%"/></p>
-<p><img src="screenshots/XYZReader_4.png" width="65%"/>   <img src="screenshots/XYZReader_5.png" width="35%"/> </p>
-<p><img src="screenshots/XYZReader_6.png" width="65%"/></p>
-
-
+<p><img src="screenshots/XYZReader_4.png" width="70%"/></p>
+<p><img src="screenshots/XYZReader_6.png" width="70%"/></p>
+<p><img src="screenshots/XYZReader_5.png" width="40%"/> </p>
